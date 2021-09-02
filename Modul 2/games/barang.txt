@@ -1,0 +1,5 @@
+nama barang
+harga barang
+quantitiy barnag
+
+Barang  (nama barang) berjumlah (quantitiy) memiliki harga satuan (harga barang) dengan harga total (quantitiy * harga barang)

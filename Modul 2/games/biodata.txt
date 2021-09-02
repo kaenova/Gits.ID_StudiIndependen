@@ -1,0 +1,5 @@
+Write your name : rizky
+Write your university : widyatama
+Write your age : 21
+Write your hobby : ngoding
+Hello my name is rizky from widyatama my age 21 and my hobby ngoding.
