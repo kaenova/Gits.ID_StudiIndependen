@@ -33,8 +33,9 @@ func main() {
 	)
 	in := bufio.NewReader(os.Stdin)
 
+	first := true
+
 	for ulang {
-		fmt.Println("========================")
 		fmt.Println("Menu")
 		fmt.Println("1. Input Data")
 		fmt.Println("2. Menghapus Data by Index")
@@ -44,7 +45,12 @@ func main() {
 		fmt.Println("6. Cari by Nama")
 		fmt.Println("7. Keluar")
 		fmt.Print("Masukkan nomor menu : ")
-		fmt.Scanf("%d", &pilihan)
+		if first {
+			fmt.Scanf("%d", &pilihan)
+			first = false
+		} else {
+			fmt.Scanf("\n%d", &pilihan)
+		}
 		fmt.Println("========================")
 
 		switch pilihan {
@@ -55,15 +61,16 @@ func main() {
 			*/
 			fmt.Println("Inputting Data")
 			var (
+				nama_dicari   string
 				kode_barang   uint
 				harga_barang  float64
 				diskon_barang float64
 				ulang_input   bool = true
 			)
 			for ulang_input {
-				fmt.Print("\nKode barang : ")
-				fmt.Scanf("%d", &kode_barang)
-				fmt.Println(kode_barang)
+				fmt.Print("Kode barang : ")
+				fmt.Scanf("\n%d", &kode_barang)
+				fmt.Println(kode, kode_barang)
 				if len(kode) > 0 {
 					for i := 0; i < len(kode); i++ {
 						if kode_barang == kode[i] {
@@ -71,43 +78,63 @@ func main() {
 							ulang_input = true
 						} else {
 							ulang_input = false
+							kode = append(kode, kode_barang)
 						}
 					}
 				} else {
 					ulang_input = false
+					kode = append(kode, kode_barang)
 				}
 
 				if !ulang_input {
 					// Nama Barang
-					fmt.Print("\nNama barang : ")
-					nama_dicari, err := in.ReadString('\n')
-					if err != nil {
-						fmt.Println(err)
-					}
+					fmt.Print("Nama barang : ")
+					fmt.Scanf("\n%s", &nama_dicari)
 					nama_dicari = strings.ReplaceAll(nama_dicari, "\n", "")
 					nama_dicari = strings.ToLower(nama_dicari)
 					nama = append(nama, nama_dicari)
+					ulang_input = false
+				}
 
+				if !ulang_input {
 					// Harga Barang
-					fmt.Print("\nHarga barang : ")
+					fmt.Print("Harga barang : ")
 					fmt.Scanf("\n%f", &harga_barang)
-					harga_barang, err = strconv.ParseFloat(fmt.Sprintf("%.2f", harga_barang), 2)
-					harga = append(harga, float32(harga_barang))
+					if harga_barang < 0 {
+						ulang_input = true
+					} else {
+						harga_barang, err := strconv.ParseFloat(fmt.Sprintf("%.2f", harga_barang), 2)
+						if err != nil {
+							fmt.Println("Sistem error, perubahan harga barang")
+						}
+						harga = append(harga, float32(harga_barang))
+					}
+				}
 
+				if !ulang_input {
 					// Diskon
 					ulang_input = true
 					for ulang_input {
-						fmt.Print("\nMasukkan diskon (desimal) : ")
+						fmt.Print("Masukkan diskon (desimal) : ")
 						fmt.Scanf("\n%f", &diskon_barang)
 						if (diskon_barang <= 1) && (diskon_barang >= 0) {
 							ulang_input = false
-							diskon_barang, err = strconv.ParseFloat(fmt.Sprintf("%.2f", diskon_barang), 2)
-							diskon = append(harga, float32(diskon_barang))
+							diskon_barang, err := strconv.ParseFloat(fmt.Sprintf("%.2f", diskon_barang), 2)
+							if err != nil {
+								fmt.Println("Sistem error, perubahan harga barang")
+							}
+							diskon = append(diskon, float32(diskon_barang))
 							harga_diskon = append(harga_diskon, float32(diskon_barang*harga_barang))
 						} else {
 							fmt.Println("Diskon tidak valid, masukkan dalam bentuk desimal")
 						}
 					}
+				}
+				if ulang_input {
+					fmt.Println("=================")
+					fmt.Println("Mengulangi Input")
+				} else {
+					fmt.Println(" Data Berhasil Dimasukkan ")
 				}
 			}
 		case 2:
@@ -118,13 +145,14 @@ func main() {
 
 		case 3:
 			var patokan_angka int = len(kode)
+
 			if patokan_angka != len(nama) || patokan_angka != len(harga) || patokan_angka != len(diskon) || patokan_angka != len(harga_diskon) {
 				fmt.Println("Data corrupted, exiting program")
 				ulang = false
 				break
 			}
 			for i := 0; i < len(kode); i++ {
-				fmt.Println("Barang ke", i+1)
+				fmt.Println("[", i, "]", "Barang ke", i+1)
 				fmt.Println("Kode barang :", kode[i])
 				fmt.Println("Nama barang :", nama[i])
 				fmt.Println("Harga barang :", harga[i])
@@ -133,7 +161,8 @@ func main() {
 			}
 		case 4:
 			var patokan_angka int = len(kode)
-			if patokan_angka != len(nama) || patokan_angka != len(harga) || patokan_angka != len(diskon) || patokan_angka != len(harga_diskon) {
+			fmt.Println(kode, nama, harga, diskon, harga_diskon)
+			if (patokan_angka != len(nama)) || (patokan_angka != len(harga)) || (patokan_angka != len(diskon)) || (patokan_angka != len(harga_diskon)) {
 				fmt.Println("Data corrupted, exiting program")
 				ulang = false
 				break
@@ -176,5 +205,6 @@ func main() {
 		default:
 			fmt.Println("Pilihan tidak dimengerti, kembali ke menu")
 		}
+		fmt.Println("===================")
 	}
 }
