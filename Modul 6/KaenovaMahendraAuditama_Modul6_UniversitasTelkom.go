@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	data    [][3]string // ID, NAMA, SCORE
+	data    [][4]string // ID, NAMA, SCORE
 	menu    bool        = true
 	pilihan int
 )
@@ -29,10 +29,11 @@ func main() {
 		switch pilihan {
 		case 1:
 			var (
-				input_nama   string
-				input_rating float32
-				input_id     string
-				ulang        bool = true
+				input_nama       string
+				input_rating     float32
+				input_id         string
+				input_keterangan string
+				ulang            bool = true
 			)
 			for ulang {
 				fmt.Print("Masukkan ID: ")
@@ -56,13 +57,21 @@ func main() {
 				fmt.Scanln(&input_rating)
 				if (input_rating <= 5.0) && (input_rating >= 0.0) {
 					ulang = false
+
 				} else {
 					fmt.Println("Rating tidak valid (0.0 - 5.0)")
 				}
 			}
-
+			input_keterangan = "not_defined"
+			if input_rating > 4.0 {
+				input_keterangan = "good"
+			} else if input_rating >= 2.0 {
+				input_keterangan = "average"
+			} else if input_rating >= 0 {
+				input_keterangan = "poor"
+			}
 			// Masukkan ke data utama
-			var data_temp = [3]string{input_id, input_nama, fmt.Sprintf("%.1f", input_rating)}
+			var data_temp = [4]string{input_id, input_nama, fmt.Sprintf("%.1f", input_rating), input_keterangan}
 			data = append(data, data_temp)
 			fmt.Println("Data berhasil dimasukkan")
 
@@ -70,7 +79,7 @@ func main() {
 			var (
 				input_id    string
 				index       int = -1
-				kiri, kanan [][3]string
+				kiri, kanan [][4]string
 			)
 			if len(data) > 0 {
 				fmt.Print("Masukkan ID data yang ingin dihapus : ")
@@ -101,6 +110,7 @@ func main() {
 					fmt.Println("ID :", data[i][0])
 					fmt.Println("	Nama :", data[i][1])
 					fmt.Println("	Score :", data[i][2])
+					fmt.Println("	Keterangan :", data[i][3])
 				}
 				fmt.Println("Jumlah data :", len(data))
 			} else {
@@ -120,6 +130,7 @@ func main() {
 					fmt.Println("ID :", data[i][0])
 					fmt.Println("	Nama :", data[i][1])
 					fmt.Println("	Score :", data[i][2])
+					fmt.Println("	Keterangan :", data[i][3])
 					break
 				}
 			}
@@ -135,17 +146,16 @@ func main() {
 				fmt.Println("Menampilkan 3 game favorit berdasarkan score")
 
 				// Buat data copy agar aman
-				data_copy := make([][3]string, len(data))
+				data_copy := make([][4]string, len(data))
 				copy(data_copy, data)
-				fmt.Println(data_copy)
 
 				// sort data_copy by rating using ParseFloat
 				for i := 0; i < len(data_copy)-1; i++ {
 					idx_nilai_terbesar = i
 					for j := i + 1; j < len(data_copy); j++ {
-						num1, err := strconv.ParseFloat(data_copy[i][2], 2)
+						num1, err := strconv.ParseFloat(data_copy[idx_nilai_terbesar][2], 2)
 						if err != nil {
-							fmt.Println("Error when converting to float of", data_copy[i][2])
+							fmt.Println("Error when converting to float of", data_copy[idx_nilai_terbesar][2])
 						}
 						num2, err := strconv.ParseFloat(data_copy[j][2], 2)
 						if err != nil {
@@ -161,10 +171,11 @@ func main() {
 					data_copy[idx_nilai_terbesar] = temp
 				}
 
-				for i := 0; i < len(data_copy); i++ {
+				for i := 0; i < 3; i++ {
 					fmt.Println("ID :", data_copy[i][0])
 					fmt.Println("	Nama :", data_copy[i][1])
 					fmt.Println("	Score :", data_copy[i][2])
+					fmt.Println("	Keterangan :", data_copy[i][3])
 				}
 
 			} else {
@@ -184,6 +195,7 @@ func main() {
 						fmt.Println("ID :", data[i][0])
 						fmt.Println("	Nama :", data[i][1])
 						fmt.Println("	Score :", data[i][2])
+						fmt.Println("	Keterangan :", data[i][3])
 						counter++
 					}
 				}
