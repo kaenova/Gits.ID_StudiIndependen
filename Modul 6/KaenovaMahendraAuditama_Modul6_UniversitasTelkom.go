@@ -8,7 +8,7 @@ import (
 var (
 	data    [][4]string // ID, NAMA, SCORE
 	menu    bool        = true
-	pilihan int
+	pilihan int         = -1
 )
 
 func main() {
@@ -36,9 +36,16 @@ func main() {
 				ulang            bool = true
 			)
 			for ulang {
-				fmt.Print("Masukkan ID: ")
-				fmt.Scanln(&input_id)
-				ulang = false
+				for ulang {
+					fmt.Print("Masukkan ID: ")
+					fmt.Scanln(&input_id)
+					if len(input_id) > 7 {
+						fmt.Println("Input ID tidak sesuai format, harap masukkan dengan panjang maksimal 7 huruf")
+					} else {
+						ulang = false
+					}
+				}
+
 				// Cek id sudah pernah dipakai atau belum
 				for i := 0; i < len(data); i++ {
 					if input_id == data[i][0] {
@@ -48,6 +55,7 @@ func main() {
 					}
 				}
 			}
+
 			fmt.Print("Masukkan nama game: ")
 			fmt.Scanln(&input_nama)
 
@@ -106,11 +114,10 @@ func main() {
 			}
 		case 3:
 			if len(data) > 0 {
+				fmt.Printf("|%7s|%15s|%8s|%12s|\n", "ID", "Nama", "Score", "Keterangan")
+				fmt.Printf("|%7s|%15s|%8s|%12s|\n", "-------", "---------------", "--------", "------------")
 				for i := 0; i < len(data); i++ {
-					fmt.Println("ID :", data[i][0])
-					fmt.Println("	Nama :", data[i][1])
-					fmt.Println("	Score :", data[i][2])
-					fmt.Println("	Keterangan :", data[i][3])
+					fmt.Printf("|%7s|%15s|%8s|%12s|\n", data[i][0], data[i][1], data[i][2], data[i][3])
 				}
 				fmt.Println("Jumlah data :", len(data))
 			} else {
@@ -127,10 +134,9 @@ func main() {
 				if data[i][1] == input_nama {
 					ketemu = true
 					fmt.Println("Data ditemukan")
-					fmt.Println("ID :", data[i][0])
-					fmt.Println("	Nama :", data[i][1])
-					fmt.Println("	Score :", data[i][2])
-					fmt.Println("	Keterangan :", data[i][3])
+					fmt.Printf("|%7s|%15s|%8s|%12s|\n", "ID", "Nama", "Score", "Keterangan")
+					fmt.Printf("|%7s|%15s|%8s|%12s|\n", "-------", "---------------", "--------", "------------")
+					fmt.Printf("|%7s|%15s|%8s|%12s|\n", data[i][0], data[i][1], data[i][2], data[i][3])
 					break
 				}
 			}
@@ -171,11 +177,10 @@ func main() {
 					data_copy[idx_nilai_terbesar] = temp
 				}
 
+				fmt.Printf("|%7s|%15s|%8s|%12s|\n", "ID", "Nama", "Score", "Keterangan")
+				fmt.Printf("|%7s|%15s|%8s|%12s|\n", "-------", "---------------", "--------", "------------")
 				for i := 0; i < 3; i++ {
-					fmt.Println("ID :", data_copy[i][0])
-					fmt.Println("	Nama :", data_copy[i][1])
-					fmt.Println("	Score :", data_copy[i][2])
-					fmt.Println("	Keterangan :", data_copy[i][3])
+					fmt.Printf("|%7s|%15s|%8s|%12s|\n", data_copy[i][0], data_copy[i][1], data_copy[i][2], data_copy[i][3])
 				}
 
 			} else {
@@ -186,16 +191,15 @@ func main() {
 			var counter int = 0
 			if len(data) > 0 {
 				fmt.Println("Menampilkan game yang memiliki score >4.0")
+				fmt.Printf("|%7s|%15s|%8s|%12s|\n", "ID", "Nama", "Score", "Keterangan")
+				fmt.Printf("|%7s|%15s|%8s|%12s|\n", "-------", "---------------", "--------", "------------")
 				for i := 0; i < len(data); i++ {
 					nilai, err := strconv.ParseFloat(data[i][2], 2)
 					if err != nil {
 						fmt.Println("Error when converting to float of", data[i][2])
 					}
 					if nilai > 4.0 {
-						fmt.Println("ID :", data[i][0])
-						fmt.Println("	Nama :", data[i][1])
-						fmt.Println("	Score :", data[i][2])
-						fmt.Println("	Keterangan :", data[i][3])
+						fmt.Printf("|%7s|%15s|%8s|%12s|\n", data[i][0], data[i][1], data[i][2], data[i][3])
 						counter++
 					}
 				}
@@ -209,6 +213,7 @@ func main() {
 			fmt.Println("Pilihan tidak dikenali, kembali ke menu")
 		}
 		fmt.Println("===================")
+		pilihan = -1
 
 	}
 
