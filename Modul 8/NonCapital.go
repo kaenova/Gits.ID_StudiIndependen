@@ -15,11 +15,17 @@ func main() {
 }
 
 func NonCapital(kata string) uint {
-	var jumlah uint = 0
-	for i := 0; i < len(kata); i++ {
-		if !((kata[i] >= 65) && (kata[i] <= 90)) {
-			jumlah++
-		}
+	var hasil uint
+	current := byte(kata[0])
+	if !((current >= byte('A')) && (current <= byte('Z'))) {
+		hasil = 1
+	} else {
+		hasil = 0
 	}
-	return jumlah
+	if len(kata) == 1 {
+		return hasil
+	} else {
+		kata_baru := kata[1:]
+		return hasil + NonCapital(kata_baru)
+	}
 }
