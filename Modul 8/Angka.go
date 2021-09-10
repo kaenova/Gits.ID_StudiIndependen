@@ -11,15 +11,21 @@ func main() {
 	var kata string
 	fmt.Print("Masukkan kata: ")
 	fmt.Scanln(&kata)
-	fmt.Println("Jumlah huruf non kapital :", JumlahAngka(kata))
+	fmt.Println("Jumlah angka :", JumlahAngka(kata))
 }
 
 func JumlahAngka(kata string) uint {
-	var jumlah uint = 0
-	for i := 0; i < len(kata); i++ {
-		if (kata[i] >= 48) && (kata[i] <= 57) {
-			jumlah++
-		}
+	var hasil uint
+	current := byte(kata[0])
+	if (current >= byte('0')) && (current <= byte('9')) {
+		hasil = 1
+	} else {
+		hasil = 0
 	}
-	return jumlah
+	if len(kata) == 1 {
+		return hasil
+	} else {
+		kata_baru := kata[1:]
+		return hasil + JumlahAngka(kata_baru)
+	}
 }
