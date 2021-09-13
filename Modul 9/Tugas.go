@@ -1,3 +1,8 @@
+/*
+Kaenova Mahendra Auditama
+Universitas Telkom
+*/
+
 package main
 
 import (
